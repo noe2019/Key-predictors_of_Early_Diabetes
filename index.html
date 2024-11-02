@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Early-Onset T2DM Predictor</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #result { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Early-Onset Type 2 Diabetes Predictor</h1>
+    <form id="predictForm">
+        <label for="age">Age:</label><br>
+        <input type="number" id="age" name="age"><br><br>
+
+        <label for="race_ethnicity">Race/Ethnicity:</label><br>
+        <select id="race_ethnicity" name="race_ethnicity">
+            <option value="1">Non-Hispanic White</option>
+            <option value="2">Non-Hispanic Black</option>
+            <option value="3">Hispanic</option>
+        </select><br><br>
+
+        <label for="smoking_status">Smoking Status:</label><br>
+        <input type="checkbox" id="smoking_status" name="smoking_status"><br><br>
+
+        <label for="education_level">Education Level:</label><br>
+        <input type="number" id="education_level" name="education_level"><br><br>
+
+        <label for="marital_status">Marital Status:</label><br>
+        <input type="number" id="marital_status" name="marital_status"><br><br>
+
+        <label for="obesity">Obesity Status:</label><br>
+        <input type="checkbox" id="obesity" name="obesity"><br><br>
+
+        <label for="hypertension">Hypertension Status:</label><br>
+        <input type="checkbox" id="hypertension" name="hypertension"><br><br>
+
+        <label for="acculturation_score">Acculturation Score:</label><br>
+        <input type="number" id="acculturation_score" name="acculturation_score"><br><br>
+
+        <button type="button" onclick="predict()">Predict</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        function predict() {
+            const formData = {
+                age: parseInt(document.getElementById('age').value),
+                race_ethnicity: parseInt(document.getElementById('race_ethnicity').value),
+                smoking_status: document.getElementById('smoking_status').checked ? 1 : 0,
+                education_level: parseInt(document.getElementById('education_level').value),
+                marital_status: parseInt(document.getElementById('marital_status').value),
+                obesity: document.getElementById('obesity').checked ? 1 : 0,
+                hypertension: document.getElementById('hypertension').checked ? 1 : 0,
+                acculturation_score: parseInt(document.getElementById('acculturation_score').value)
+            };
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = `Prediction: ${data.prediction}`;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
